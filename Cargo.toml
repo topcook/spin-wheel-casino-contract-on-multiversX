@@ -1,0 +1,15 @@
+[package]
+name = "spin_wheel_contract"
+version = "0.0.0"
+authors = [ "you",]
+edition = "2018"
+publish = false
+
+[lib]
+path = "src/adder.rs"
+
+[dependencies.elrond-wasm]
+version = "0.31.1"
+
+[dev-dependencies.elrond-wasm-debug]
+version = "0.31.1"

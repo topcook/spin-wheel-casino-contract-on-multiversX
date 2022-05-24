@@ -1,0 +1,14 @@
+[package]
+name = "spin_wheel_contract-meta"
+version = "0.0.0"
+edition = "2018"
+publish = false
+authors = [ "you",]
+
+[dev-dependencies]
+
+[dependencies.spin_wheel_contract]
+path = ".."
+
+[dependencies.elrond-wasm-debug]
+version = "0.31.1"
