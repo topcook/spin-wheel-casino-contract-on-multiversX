@@ -10,33 +10,43 @@ WALLET="./wallet/wallet-owner.pem"
 
 ################################################
 
+LOTTERY_OUTPUT_ESDT_TOKEN="SWTT-916204"
+LOTTERY_OUTPUT_ESDT_TOKEN_HEX="0x$(echo -n ${LOTTERY_OUTPUT_ESDT_TOKEN} | xxd -p -u | tr -d '\n')"
+DEFAULT_INPUT_AMOUNT=50000000000000000
+RESULT_TYPES=1 5000000000 \
+             0 75000000000000000 \
+             1 4000000000 \
+             0 50000000000000000 \
+             1 3000000000 \
+             1 2000000000 \
+             0 25000000000000000 \
+             1 6000000000 \
 
-PING_AMOUNT=1000000000000000000
-DURATION_IN_SECONDS=60
+################################################
 
-TOKEN_ID="VITAL-bc0917"
-TOKEN_ID_HEX="0x$(echo -n ${TOKEN_ID} | xxd -p -u | tr -d '\n')"
-TOKEN_ID_ONLY_HEX="$(echo -n ${TOKEN_ID} | xxd -p -u | tr -d '\n')"
+# TOKEN_ID="VITAL-bc0917"
+# TOKEN_ID_HEX="0x$(echo -n ${TOKEN_ID} | xxd -p -u | tr -d '\n')"
+# TOKEN_ID_ONLY_HEX="$(echo -n ${TOKEN_ID} | xxd -p -u | tr -d '\n')"
 
-MIN_STAKE_LIMIT=100000000000000       # 1000000 VITAL
+# MIN_STAKE_LIMIT=100000000000000       # 1000000 VITAL
 
-REWARD_APY=1400 # 14
+# REWARD_APY=1400 # 14
 
-NEW_REWARD_APY=1400 # 14
+# NEW_REWARD_APY=1400 # 14
 
-PAUSED=1
+# PAUSED=1
 
-STAKE="stake"
-STAKE_ONLY_HEX="$(echo -n ${STAKE} | xxd -p -u | tr -d '\n')"
+# STAKE="stake"
+# STAKE_ONLY_HEX="$(echo -n ${STAKE} | xxd -p -u | tr -d '\n')"
 
-CALLER_ADDRESS="erd149axj8feledcw7zck5f3ecwrncgd0gemcr9q69yxqlk0zvnl5zvs065jqu"
-CALLER_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${CALLER_ADDRESS})"
+# CALLER_ADDRESS="erd149axj8feledcw7zck5f3ecwrncgd0gemcr9q69yxqlk0zvnl5zvs065jqu"
+# CALLER_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${CALLER_ADDRESS})"
 
-NEW_ADDRESS="erd1r0s6ss90ktgtk6eytdskpkndl6ke4y75t0c8fq2mj7zumyncmtrsx9ud2u"
-NEW_ADDRESS_HEX="$(erdpy wallet bech32 --decode ${NEW_ADDRESS})"
+# NEW_ADDRESS="erd1r0s6ss90ktgtk6eytdskpkndl6ke4y75t0c8fq2mj7zumyncmtrsx9ud2u"
+# NEW_ADDRESS_HEX="$(erdpy wallet bech32 --decode ${NEW_ADDRESS})"
 
-UPGRADE_ADDRESS="erd1qqqqqqqqqqqqqpgqc4gutf9tqmqqlxmepm5t2dz9fe9jcvhr7lnqln3djs"
-UPGRADE_ADDRESS_ONLY_HEX="$(erdpy wallet bech32 --decode ${UPGRADE_ADDRESS})"
+# UPGRADE_ADDRESS="erd1qqqqqqqqqqqqqpgqc4gutf9tqmqqlxmepm5t2dz9fe9jcvhr7lnqln3djs"
+# UPGRADE_ADDRESS_ONLY_HEX="$(erdpy wallet bech32 --decode ${UPGRADE_ADDRESS})"
 
 ################################################
 ADDRESS=$(erdpy data load --key=address-devnet)
@@ -49,7 +59,14 @@ deploy() {
     --recall-nonce \
     --pem=${WALLET} \
     --gas-limit=50000000 \
-    --arguments ${PING_AMOUNT} ${DURATION_IN_SECONDS} \
+    --arguments ${LOTTERY_OUTPUT_ESDT_TOKEN_HEX} ${DEFAULT_INPUT_AMOUNT} 1 5000000000 \
+             0 75000000000000000 \
+             1 4000000000 \
+             0 50000000000000000 \
+             1 3000000000 \
+             1 2000000000 \
+             0 25000000000000000 \
+             1 6000000000 \
     --send \
     --metadata-payable  \
     --metadata-payable-by-sc \

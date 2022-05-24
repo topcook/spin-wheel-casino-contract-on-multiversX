@@ -7,6 +7,12 @@ elrond_wasm::derive_imports!();
 const DEFAULT_NUMBER_OF_RESULTS_TO_SHOW: u32 = 20;
 const NUMBER_OF_RESULT_TYPES: u32 = 8;
 
+// #[derive(ManagedVecItem, TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, Clone)]
+// pub struct InputResultType<M: ManagedTypeApi> {
+//     pub token_number: u32,
+// 	pub amount: BigUint<M>,
+// }
+
 #[derive(ManagedVecItem, TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, Clone)]
 pub struct ResultType<M: ManagedTypeApi> {
     pub token_id: TokenIdentifier<M>,
@@ -27,17 +33,43 @@ pub trait SpinWheelGame {
     fn init(&self,
         lottery_output_esdt_token: TokenIdentifier,
         default_input_amount: BigUint,
-        result_types: MultiValueManagedVec<ResultType<Self::Api>>
+        // result_types: MultiValueManagedVec<InputResultType<Self::Api>>
+        result_types: MultiValueEncoded<MultiValue2<u32, BigUint>>
     ) {
         self.default_input_amount().set(&default_input_amount); // 0.05 egld
         self.lottery_output_edst_token().set(&lottery_output_esdt_token);
         
-        for result_type in result_types.iter() {
+        for result_type in result_types.into_iter() {
+            let (token_number, amount) = result_type.into_tuple();
+
+            let token_id;
+            if token_number == 1 {
+                token_id = self.lottery_output_edst_token().get();
+            } else {
+                token_id = TokenIdentifier::egld();
+            }
+
             self.result_types().push(&ResultType{ 
-                token_id: result_type.token_id,
-                amount: result_type.amount
+                token_id: token_id,
+                amount: amount
             });
         }
+
+
+
+        // for result_type in result_types.iter() {
+        //     let token_id;
+        //     if result_type.token_number == 1 {
+        //         token_id = self.lottery_output_edst_token().get();
+        //     } else {
+        //         token_id = TokenIdentifier::egld();
+        //     }
+            
+        //     self.result_types().push(&ResultType{ 
+        //         token_id: token_id,
+        //         amount: result_type.amount
+        //     });
+        // }
     }
 
     #[payable("EGLD")]
