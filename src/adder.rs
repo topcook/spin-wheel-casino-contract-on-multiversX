@@ -105,6 +105,8 @@ pub trait SpinWheelGame {
 	        user_address: caller,
 	        timestamp: self.blockchain().get_block_timestamp(),
         });
+
+        self.current_lottery_result_of_user(&caller).set(rand_index);
     }
 
     #[only_owner]
@@ -155,4 +157,11 @@ pub trait SpinWheelGame {
 
         items_vec
     }
+
+    #[view(getCurrentLotteryResultOfUser)]
+    #[storage_mapper("currentLotteryResultOfUser")]
+    fn current_lottery_result_of_user(
+        &self,
+        user: &ManagedAddress,
+    ) -> SingleValueMapper<u32>;
 }
