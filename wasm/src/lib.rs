@@ -9,6 +9,7 @@ elrond_wasm_node::wasm_endpoints! {
     (
         do_lottery
         getDefaultInputAmount
+        getLotteryCountOfUser
         getLotteryOutputESDTToken
         getRecentLotteryResults
         getResultTypes

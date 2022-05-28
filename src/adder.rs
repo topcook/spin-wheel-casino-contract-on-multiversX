@@ -85,9 +85,10 @@ pub trait SpinWheelGame {
         );
 
         let mut rand_source = RandomnessSource::<Self::Api>::new();
-        let rand_index = rand_source.next_u32_in_range(0, NUMBER_OF_RESULT_TYPES);
+        let rand_index = rand_source.next_u32_in_range(1, NUMBER_OF_RESULT_TYPES+1);
 
         let caller = self.blockchain().get_caller();
+        // let current_timestamp = self.blockchain().get_block_timestamp();
 
         // esdt token
         let token_id = self.result_types().get((rand_index as u32) as usize).token_id;
@@ -100,13 +101,14 @@ pub trait SpinWheelGame {
         // self.send()
         // .direct_egld(&caller, output_amount, b"withdraw egld successful");
 
+        let lottery_count_of_user = self.lottery_count_of_user(&caller).get();
+        self.lottery_count_of_user(&caller).set(lottery_count_of_user + 1);
+
         self.results().push(&Result{
             result_type: rand_index,
 	        user_address: caller,
 	        timestamp: self.blockchain().get_block_timestamp(),
         });
-
-        self.current_lottery_result_of_user(&caller).set(rand_index);
     }
 
     #[only_owner]
@@ -158,10 +160,17 @@ pub trait SpinWheelGame {
         items_vec
     }
 
-    #[view(getCurrentLotteryResultOfUser)]
-    #[storage_mapper("currentLotteryResultOfUser")]
-    fn current_lottery_result_of_user(
+    #[view(getLotteryCountOfUser)]
+    #[storage_mapper("lotteryCountOfUser")]
+    fn lottery_count_of_user(
         &self,
         user: &ManagedAddress,
-    ) -> SingleValueMapper<u32>;
+    ) -> SingleValueMapper<u64>;
+
+    // #[view(getCurrentTimestamp)]
+    // fn get_current_timestamp(
+    //     &self,
+    // ) -> u64 {
+    //     self.blockchain().get_block_timestamp()
+    // }
 }
